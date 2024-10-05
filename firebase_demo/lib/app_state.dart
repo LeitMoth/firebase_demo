@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'guest_book_message.dart';
 
-enum Attending { yes, no, unknown }
+//enum Attending { yes, no, unknown }
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -24,21 +24,17 @@ class ApplicationState extends ChangeNotifier {
   List<GuestBookMessage> _guestBookMessages = [];
   List<GuestBookMessage> get guestBookMessages => _guestBookMessages;
 
-  int _attendees = 0;
-  int get attendees => _attendees;
+  int _totalAttendees = 0;
+  int get totalAttendees => _totalAttendees;
 
-  Attending _attending = Attending.unknown;
+  int _localNumAttending = 0;
   StreamSubscription<DocumentSnapshot>? _attendingSubscription;
-  Attending get attending => _attending;
-  set attending(Attending attending) {
+  int get localNumAttending => _localNumAttending;
+  set localNumAttending(int attending) {
     final userDoc = FirebaseFirestore.instance
         .collection('attendees')
         .doc(FirebaseAuth.instance.currentUser!.uid);
-    if (attending == Attending.yes) {
-      userDoc.set(<String, dynamic>{'attending': true});
-    } else {
-      userDoc.set(<String, dynamic>{'attending': false});
-    }
+    userDoc.set(<String, dynamic>{'numAttending': attending});
   }
 
   Future<void> init() async {
@@ -52,7 +48,7 @@ class ApplicationState extends ChangeNotifier {
         .where('attending', isEqualTo: true)
         .snapshots()
         .listen((snapshot) {
-      _attendees = snapshot.docs.length;
+      _totalAttendees = snapshot.docs.length;
       notifyListeners();
     });
 
@@ -81,13 +77,9 @@ class ApplicationState extends ChangeNotifier {
             .snapshots()
             .listen((snapshot) {
           if (snapshot.data() != null) {
-            if (snapshot.data()!['attending'] as bool) {
-              _attending = Attending.yes;
-            } else {
-              _attending = Attending.no;
-            }
+            _localNumAttending = snapshot.data()!['numAttending'] as int;
           } else {
-            _attending = Attending.unknown;
+            _localNumAttending = 0;
           }
           notifyListeners();
         });

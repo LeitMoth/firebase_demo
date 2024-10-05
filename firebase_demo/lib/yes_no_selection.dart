@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'src/widgets.dart';
 
+/*
 class YesNoSelection extends StatelessWidget {
   const YesNoSelection(
       {super.key, required this.state, required this.onSelection});
@@ -66,3 +67,4 @@ class YesNoSelection extends StatelessWidget {
     }
   }
 }
+*/

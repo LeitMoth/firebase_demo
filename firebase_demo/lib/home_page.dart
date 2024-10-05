@@ -6,11 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart'
     hide
         EmailAuthProvider,
         PhoneAuthProvider; 
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
+import 'package:gtk_flutter/report_attending.dart'; 
 import 'package:provider/provider.dart';
 
 import 'app_state.dart';
-import 'yes_no_selection.dart';
 import 'guest_book.dart';
 import 'src/authentication.dart';
 
@@ -53,16 +53,17 @@ class HomePage extends StatelessWidget {
             builder: (context, appState, _) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                switch (appState.attendees) {
+                switch (appState.totalAttendees) {
                   1 => const Paragraph('1 person going'),
-                  >= 2 => Paragraph('${appState.attendees} people going'),
+                  >= 2 => Paragraph('${appState.totalAttendees} people going'),
                   _ => const Paragraph('No one going'),
                 },
                 if (appState.loggedIn) ...[
-                  YesNoSelection(
-                    state: appState.attending,
-                    onSelection: (attending) => appState.attending = attending,
-                  ),
+                  // YesNoSelection(
+                  //   state: appState.localNumAttending,
+                  //   onSelection: (attending) => appState.localNumAttending = attending,
+                  // ),
+                  ReportAttending(localNumAttending: appState.localNumAttending, onUpdate: (attending) => appState.localNumAttending = attending),
                   const Header('Dicussion'),
                   GuestBook(
                     addMessage: (message) =>
