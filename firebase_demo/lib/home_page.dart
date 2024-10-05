@@ -2,16 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_auth/firebase_auth.dart' // new
+import 'package:firebase_auth/firebase_auth.dart' 
     hide
         EmailAuthProvider,
-        PhoneAuthProvider; // new
-import 'package:flutter/material.dart'; // new
-import 'package:gtk_flutter/guest_book.dart';
-import 'package:provider/provider.dart'; // new
+        PhoneAuthProvider; 
+import 'package:flutter/material.dart'; 
+import 'package:provider/provider.dart';
 
-import 'app_state.dart'; // new
-import 'src/authentication.dart'; // new
+import 'app_state.dart';
+import 'yes_no_selection.dart';
+import 'guest_book.dart';
+import 'src/authentication.dart';
 
 import 'src/widgets.dart';
 
@@ -52,7 +53,16 @@ class HomePage extends StatelessWidget {
             builder: (context, appState, _) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                switch (appState.attendees) {
+                  1 => const Paragraph('1 person going'),
+                  >= 2 => Paragraph('${appState.attendees} people going'),
+                  _ => const Paragraph('No one going'),
+                },
                 if (appState.loggedIn) ...[
+                  YesNoSelection(
+                    state: appState.attending,
+                    onSelection: (attending) => appState.attending = attending,
+                  ),
                   const Header('Dicussion'),
                   GuestBook(
                     addMessage: (message) =>
