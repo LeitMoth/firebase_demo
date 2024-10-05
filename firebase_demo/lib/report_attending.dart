@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'src/widgets.dart';
 
 class ReportAttending extends StatelessWidget {
-  ReportAttending({super.key, required this.localNumAttending, required this.onUpdate});
+  ReportAttending(
+      {super.key, required this.localNumAttending, required this.onUpdate});
   final int localNumAttending;
   final void Function(int localNumAttending) onUpdate;
 
@@ -21,8 +22,9 @@ class ReportAttending extends StatelessWidget {
             Expanded(
               child: TextFormField(
                 controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Number of guests',
+                decoration: InputDecoration(
+                  labelText: 'Size of your party (0 to cancel)',
+                  hintText: "$localNumAttending",
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {

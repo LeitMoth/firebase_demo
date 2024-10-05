@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'guest_book_message.dart';
 
-//enum Attending { yes, no, unknown }
-
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
     init();
@@ -45,10 +43,12 @@ class ApplicationState extends ChangeNotifier {
 
     FirebaseFirestore.instance
         .collection('attendees')
-        .where('attending', isEqualTo: true)
         .snapshots()
         .listen((snapshot) {
-      _totalAttendees = snapshot.docs.length;
+      _totalAttendees = 0;
+      for (final document in snapshot.docs) {
+        _totalAttendees += document.data()['numAttending'] as int;
+      }
       notifyListeners();
     });
 
